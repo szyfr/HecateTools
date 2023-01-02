@@ -4,6 +4,7 @@
 
 #### Compression
 ##### ver 1.0.0
+[Changelog](CHANGELOGcompressor.md)
 Just simply drag the file you want to compress, preferable a .png, and it'll spit out four files.
 
 - _CompRay.bin : Complete file compressed using Deflate.

@@ -113,7 +113,7 @@ compress_array :: proc(
 ) -> bytes.Buffer {
 	buffer : bytes.Buffer
 	
-	length : u64 = u64(data[0]*data[1])
+	length : u64 = u64(data[0]) * u64(data[1]) + 2
 	bytes.buffer_write_byte(&buffer, byte(length >> 0))
 	bytes.buffer_write_byte(&buffer, byte(length >> 8))
 	bytes.buffer_write_byte(&buffer, byte(length >> 16))
@@ -145,8 +145,7 @@ compress_buffer :: proc(
 ) -> bytes.Buffer {
 	buffer : bytes.Buffer
 	
-	length : u64 = u64(data.buf[0]) * u64(data.buf[1])
-	fmt.printf("%v*%v=%v\n",data.buf[0],data.buf[1],length)
+	length : u64 = u64(data.buf[0]) * u64(data.buf[1]) + 2
 	bytes.buffer_write_byte(&buffer, u8(length >>  0))
 	bytes.buffer_write_byte(&buffer, u8(length >>  8))
 	bytes.buffer_write_byte(&buffer, u8(length >> 16))
