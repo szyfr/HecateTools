@@ -53,7 +53,8 @@ main :: proc() {
 					{},
 				)
 				imgBuffer : bytes.Buffer
-				fmt.printf("%v\n", img.channels)
+				bytes.buffer_write_byte(&imgBuffer, u8(img.width))
+				bytes.buffer_write_byte(&imgBuffer, u8(img.height))
 				for o:=0;o<len(img.pixels.buf);o+=img.channels {
 					col : raylib.Color = {
 						img.pixels.buf[o+0],
@@ -61,7 +62,6 @@ main :: proc() {
 						img.pixels.buf[o+2],
 						255,
 					}
-					fmt.printf("run %v: %v\n",o/img.channels,col)
 
 					switch col {
 						case { 56, 56, 56,255}: bytes.buffer_write_byte(&imgBuffer, 0)
@@ -112,6 +112,16 @@ compress_array :: proc(
 	data : []u8,
 ) -> bytes.Buffer {
 	buffer : bytes.Buffer
+	
+	length : u64 = u64(data[0]*data[1])
+	bytes.buffer_write_byte(&buffer, byte(length >> 0))
+	bytes.buffer_write_byte(&buffer, byte(length >> 8))
+	bytes.buffer_write_byte(&buffer, byte(length >> 16))
+	bytes.buffer_write_byte(&buffer, byte(length >> 24))
+	bytes.buffer_write_byte(&buffer, byte(length >> 32))
+	bytes.buffer_write_byte(&buffer, byte(length >> 40))
+	bytes.buffer_write_byte(&buffer, byte(length >> 48))
+	bytes.buffer_write_byte(&buffer, byte(length >> 56))
 
 	count : u8 = 1
 	for o:=0;o<len(data)-1;o+=1 {
@@ -134,6 +144,17 @@ compress_buffer :: proc(
 	data : bytes.Buffer,
 ) -> bytes.Buffer {
 	buffer : bytes.Buffer
+	
+	length : u64 = u64(data.buf[0]) * u64(data.buf[1])
+	fmt.printf("%v*%v=%v\n",data.buf[0],data.buf[1],length)
+	bytes.buffer_write_byte(&buffer, u8(length >>  0))
+	bytes.buffer_write_byte(&buffer, u8(length >>  8))
+	bytes.buffer_write_byte(&buffer, u8(length >> 16))
+	bytes.buffer_write_byte(&buffer, u8(length >> 24))
+	bytes.buffer_write_byte(&buffer, u8(length >> 32))
+	bytes.buffer_write_byte(&buffer, u8(length >> 40))
+	bytes.buffer_write_byte(&buffer, u8(length >> 48))
+	bytes.buffer_write_byte(&buffer, u8(length >> 56))
 
 	count : u8 = 1
 	for o:=0;o<len(data.buf)-1;o+=1 {
